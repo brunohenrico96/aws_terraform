@@ -8,13 +8,14 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform Plan'
+    name: 'Terraform Plan / Apply'
     runs-on: ubuntu-latest # A máquina virtual gratuita que o GitHub nos empresta
 
     # Injetando as credenciais da AWS direto do GitHub Secrets de forma segura
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
 
     steps:
     # 1. Baixa o seu código para a máquina do GitHub
@@ -33,6 +34,11 @@ jobs:
     - name: Terraform Validate
       run: terraform validate
 
-    # 5. Roda a simulação: o que vai mudar na AWS?
+    # 5. Gera o plano (em PR só mostra; na main o mesmo arquivo é aplicado no passo seguinte)
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -out=tfplan
+
+    # 6. Só na branch main: aplica de fato na AWS (PRs nunca rodam apply)
+    - name: Terraform Apply
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: terraform apply -auto-approve tfplan
