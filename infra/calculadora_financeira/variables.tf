@@ -31,13 +31,13 @@ variable "desired_count" {
 variable "cpu" {
   description = "CPU da task Fargate."
   type        = number
-  default     = 256
+  default     = 1024
 }
 
 variable "memory" {
   description = "Memoria da task Fargate em MiB."
   type        = number
-  default     = 512
+  default     = 2048
 }
 
 variable "vpc_cidr" {
