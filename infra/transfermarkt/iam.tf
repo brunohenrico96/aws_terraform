@@ -1,4 +1,4 @@
-# 1. Cria o crachá dizendo que o serviço "glue" pode usá-lo
+# 1. Cria o cracha dizendo que o servico "glue" pode usa-lo
 resource "aws_iam_role" "glue_transfermarkt_role" {
   name = "GlueTransfermarktRole"
 
@@ -16,13 +16,13 @@ resource "aws_iam_role" "glue_transfermarkt_role" {
   })
 }
 
-# 2. Anexa uma política padrão da AWS que permite ao Glue escrever logs no CloudWatch
+# 2. Anexa uma politica padrao da AWS que permite ao Glue escrever logs no CloudWatch
 resource "aws_iam_role_policy_attachment" "glue_service_attachment" {
   role       = aws_iam_role.glue_transfermarkt_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
 }
 
-# 3. Acesso restrito aos buckets de scripts/dados do projeto (substitui AmazonS3FullAccess)
+# 3. Acesso restrito aos buckets de scripts/dados do projeto
 resource "aws_iam_role_policy" "glue_project_s3" {
   name = "GlueTransfermarktProjectS3"
   role = aws_iam_role.glue_transfermarkt_role.id

@@ -50,8 +50,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "data_bucket" {
 resource "aws_s3_object" "glue_extracao_script" {
   bucket = aws_s3_bucket.scripts_bucket.id
   key    = "scripts/extracao.py"
-  source = "${path.module}/Scripts/futebol/transfermkt.py"
-  etag   = filemd5("${path.module}/Scripts/futebol/transfermkt.py")
+  source = "${path.module}/../../Scripts/futebol/transfermkt.py"
+  etag   = filemd5("${path.module}/../../Scripts/futebol/transfermkt.py")
 
   depends_on = [
     aws_s3_bucket_server_side_encryption_configuration.scripts_bucket,

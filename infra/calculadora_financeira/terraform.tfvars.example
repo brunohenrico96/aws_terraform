@@ -1,0 +1,8 @@
+aws_region          = "us-east-1"
+project_name        = "calculadora-financeira"
+environment         = "dev"
+container_port      = 8501
+desired_count       = 1
+cpu                 = 512
+memory              = 1024
+container_image_tag = "latest"

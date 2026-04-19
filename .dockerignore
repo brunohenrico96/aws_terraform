@@ -1,0 +1,7 @@
+*
+!Scripts/
+Scripts/*
+!Scripts/financeiro/
+Scripts/financeiro/*
+!Scripts/financeiro/calculadora_financeira/
+!Scripts/financeiro/calculadora_financeira/**
