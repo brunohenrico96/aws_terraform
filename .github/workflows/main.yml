@@ -8,8 +8,14 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform Plan / Apply'
+    name: 'Terraform Plan / Apply - ${{ matrix.stack }}'
     runs-on: ubuntu-latest # A máquina virtual gratuita que o GitHub nos empresta
+    strategy:
+      fail-fast: false
+      matrix:
+        stack:
+          - infra/calculadora_financeira
+          - infra/transfermarkt
 
     # Injetando as credenciais da AWS direto do GitHub Secrets de forma segura
     env:
@@ -28,17 +34,21 @@ jobs:
 
     # 3. Inicia o Terraform (baixa os plugins da AWS e conecta no S3)
     - name: Terraform Init
+      working-directory: ${{ matrix.stack }}
       run: terraform init
 
     # 4. Verifica se a formatação do código está correta
     - name: Terraform Validate
+      working-directory: ${{ matrix.stack }}
       run: terraform validate
 
     # 5. Gera o plano (em PR só mostra; na main o mesmo arquivo é aplicado no passo seguinte)
     - name: Terraform Plan
+      working-directory: ${{ matrix.stack }}
       run: terraform plan -out=tfplan
 
     # 6. Só na branch main: aplica de fato na AWS (PRs nunca rodam apply)
     - name: Terraform Apply
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      working-directory: ${{ matrix.stack }}
       run: terraform apply -auto-approve tfplan
