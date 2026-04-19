@@ -61,7 +61,7 @@ resource "aws_ecs_service" "app" {
   task_definition                    = aws_ecs_task_definition.app.arn
   desired_count                      = var.desired_count
   launch_type                        = "FARGATE"
-  health_check_grace_period_seconds  = 60
+  health_check_grace_period_seconds  = var.enable_load_balancer ? 60 : null
 
   network_configuration {
     subnets          = aws_subnet.public[*].id
@@ -69,10 +69,14 @@ resource "aws_ecs_service" "app" {
     assign_public_ip = true
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.app.arn
-    container_name   = "calculadora-app"
-    container_port   = var.container_port
+  dynamic "load_balancer" {
+    for_each = var.enable_load_balancer ? [1] : []
+
+    content {
+      target_group_arn = aws_lb_target_group.app[0].arn
+      container_name   = "calculadora-app"
+      container_port   = var.container_port
+    }
   }
 
   depends_on = [aws_lb_listener.http]

@@ -31,13 +31,13 @@ variable "desired_count" {
 variable "cpu" {
   description = "CPU da task Fargate."
   type        = number
-  default     = 512
+  default     = 256
 }
 
 variable "memory" {
   description = "Memoria da task Fargate em MiB."
   type        = number
-  default     = 1024
+  default     = 512
 }
 
 variable "vpc_cidr" {
@@ -74,4 +74,16 @@ variable "enable_stickiness" {
   description = "Habilita afinidade de sessao no target group. Streamlit se beneficia disso ao escalar."
   type        = bool
   default     = true
+}
+
+variable "enable_load_balancer" {
+  description = "Mantem o ALB ativo na frente do ECS. Desative para reduzir custo e acessar o app direto pela porta 8501."
+  type        = bool
+  default     = false
+}
+
+variable "app_ingress_cidrs" {
+  description = "CIDRs autorizados a acessar o app diretamente quando o ALB estiver desativado."
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
 }
